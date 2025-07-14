@@ -1,0 +1,37 @@
+package com.project.demo.controller;
+
+import com.project.demo.controller.payload.NewProductPayLoad;
+import com.project.demo.entity.Product;
+import com.project.demo.service.ProductService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("catalogue/products")
+@RequiredArgsConstructor
+public class ProductsController {
+
+    private final ProductService productService;
+
+    @GetMapping("list")
+    public String getProductsList(Model model) {
+        model.addAttribute("products", productService.findAllProducts());
+        return "catalogue/products/list";
+    }
+
+    @GetMapping("create")
+    public String getNewProductPage() {
+        return "catalogue/products/new_product";
+    }
+
+    @PostMapping("create")
+    public String createProduct(NewProductPayLoad payLoad) {
+        Product product = this.productService.createProduct(payLoad.title(), payLoad.details());
+        return "redirect:/catalogue/products/%d".formatted(product.getId());
+    }
+
+}
