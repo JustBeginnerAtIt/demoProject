@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("{productId:\\d+}")
+@RequestMapping("catalogue/products/{productId:\\d+}")
 public class ProductController {
 
     private final ProductService productService;
@@ -31,10 +31,16 @@ public class ProductController {
         return "catalogue/products/edit";
     }
 
-    @PostMapping("edit") {
-        public String updateProduct(@ModelAttribute("product") Product product, UpdateProductPayload payload) {
-            this.productService.updateProduct(product.getId(), payload.getTitle(), payload.details());
-        }
+    @PostMapping("edit")
+    public String updateProduct(@ModelAttribute("product") Product product, UpdateProductPayload payload) {
+        this.productService.updateProduct(product.getId(), payload.title(), payload.details());
+        return "redirect:/catalogue/products/%d".formatted(product.getId());
+    }
+
+    @PostMapping("delete")
+    public String deleteProduct(@ModelAttribute("product") Product product) {
+        this.productService.deleteProduct(product.getId());
+        return "redirect:/catalogue/products/list";
     }
 
 }

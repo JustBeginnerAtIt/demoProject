@@ -31,13 +31,18 @@ public class DefaultProductService implements ProductService {
     }
 
     @Override
-    public void updateProduct(Integer id, String name, String details) {
+    public void updateProduct(Integer id, String title, String details) {
        this.productRepository.findById(id)
                .ifPresentOrElse(product -> {
                    product.setTitle(title);
                    product.setDetails(details);
-               } () -> {
+               }, () -> {
                    throw new NoSuchElementException();
         });
+    }
+
+    @Override
+    public void deleteProduct(Integer productId) {
+        this.productRepository.deleteById(productId);
     }
 }
